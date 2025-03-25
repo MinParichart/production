@@ -12,6 +12,7 @@ import { useStudentStore } from '@/stores/student'
 import { useAdvisorStore } from '@/stores/advisor'
 import { useAppointmentStore } from '@/stores/appointment'
 import { useAnnouncementStore } from '@/stores/announcement'
+import { useFeedbackStore } from '@/stores/feedback'
 
 import adminDashboardView from '@/views/admin/adminDashboardView.vue'
 import adminStudentDetailView from '@/views/admin/adminStudentDetailView.vue'
@@ -22,6 +23,7 @@ import adminAnnouncementsDetailView from '@/views/admin/adminAnnouncementsDetail
 
 import AdvisorListView from '@/views/advisor/AdvisorListView.vue'
 import advisorDashboardView from '@/views/advisor/advisorDashboardView.vue'
+import FeedbackView from '@/views/advisor/FeedbackView.vue'
 
 import studentService from '@/services/StudentService'
 import StudentListView from '@/views/student/StudentListView.vue'
@@ -30,6 +32,7 @@ import StudentDashboardView from '@/views/student/StudentDashboardView.vue'
 import AdvisorService from '@/services/AdvisorService'
 import AppointmentService from '@/services/AppointmentService'
 import AnnouncementService from '@/services/AnnouncementService'
+import FeedbackService from '@/services/FeedbackService';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -293,6 +296,7 @@ const router = createRouter({
     /* Admin End */
 
     /* Advisor Start */
+    // FeedbackView
     {
       path: '/advisor-dashboard',
       name: 'advisor-dashboard-view',
@@ -308,6 +312,42 @@ const router = createRouter({
         }
       },
     },
+    {
+      path: '/advisor/detail/feedback/:id',
+      name: 'advisor-detail-feedback-view',
+      component: FeedbackView,
+      props: true,
+      beforeEnter: async (to: any) => {
+        const authStore = useAuthStore()
+        if (!authStore.isAdvisor) {
+          return {
+            name: '404-resource-view',
+            params: { resource: 'you-are-not-allowed-to-access' },
+          }
+        } else {
+          const id = Number(to.params.id) // ป้องกัน NaN
+          if (isNaN(id)) {
+            return {
+              name: '404-resource-view',
+              params: { resource: 'appointment' },
+            }
+          }
+          const feedbackStore = useFeedbackStore()
+          try {
+            const response = await FeedbackService.getFeedbackByStudentId(id)
+            feedbackStore.setStore(response.data)
+            return true // อนุญาตให้ไปต่อ
+          } catch (error: any) {
+            console.error('Fetch Feedback Error:', error) // เพิ่ม log สำหรับ debug
+            const status = error.response?.status
+            return status === 404
+              ? { name: '404-resource-view', params: { resource: 'feedback' } }
+              : { name: 'network-error-view' }
+          }
+        }
+      },
+    },
+
     /* Advisor End */
 
     /* Student Start */

@@ -86,7 +86,7 @@ onMounted(fetchStudents)
                   <td>
                     <RouterLink :to="student.id
                       ? {
-                        name: 'admin-student-detail-view',
+                        name: 'advisor-detail-feedback-view',
                         params: { id: student.id },
                       }
                       : '#'

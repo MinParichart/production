@@ -138,6 +138,10 @@ export interface Feedback {
   admin?: Admin
 }
 
+export interface FeedbackState {
+  feedback: Feedback | null
+}
+
 export interface Responder {
   id: number
   responder: string
