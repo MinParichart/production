@@ -89,6 +89,7 @@ export interface AnnouncementState {
   announcement: Announcement | null
 }
 
+
 export interface Appointment {
   id: number
   topic: string

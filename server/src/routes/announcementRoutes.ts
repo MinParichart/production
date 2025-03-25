@@ -16,4 +16,14 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
+router.get('/announcement-advisor/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id)
+    const getAnnouncementAdvisor = await announcementService.getAnnouncementByAdvisorId(id)
+    if (getAnnouncementAdvisor) {
+      res.json(getAnnouncementAdvisor)
+    } else {
+      res.status(404).send('Announcement of this advisor not found')
+    }
+})
+
 export default router

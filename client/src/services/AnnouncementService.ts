@@ -6,4 +6,7 @@ export default {
   getAnnouncement(id: number) {
     return apiClient.get(`/announcements/${id}`)
   },
+  getAnnouncementByAdvisorId(id: number) {
+    return apiClient.get(`/announcements/announcement-advisor/${id}`)
+  },
 }
