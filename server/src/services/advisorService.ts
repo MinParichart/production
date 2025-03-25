@@ -7,3 +7,12 @@ export function getAllAdvisors() {
 export function getAdvisorById(id: number) {
   return advisorRepository.getAdvisorById(id)
 }
+
+export function getStudentByAdvisorId(id: number) {
+  return advisorRepository.getStudentByAdvisorId(id)
+}
+
+export function getAdvisorIdByUserId(id: number) {
+  return advisorRepository.getAdvisorIdByUserId(id)
+}
+

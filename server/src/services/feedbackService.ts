@@ -7,3 +7,7 @@ export function getAllFeedbacks() {
 export function getFeedbackById(id: number) {
   return feedbackRepository.getFeedbackById(id)
 }
+
+export function getFeedbackByStudentId(id: number) {
+  return feedbackRepository.getFeedbackByStudentId(id)
+}

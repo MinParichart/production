@@ -2,6 +2,7 @@
 	 npm install prisma tsx --save-dev
 ## เริ่มให้ project ใช้ Prisma โดยใช้คำสั่ง
 	npx prisma init
+	
 
 ## เชื่อมต่อกับฐานข้อมูลโดยใช้คำสั่ง
 	npx prisma migrate dev --name init

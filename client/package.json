@@ -42,6 +42,8 @@
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.22.0",
     "eslint-plugin-typescript": "^0.14.0",
+    "prisma": "^6.5.0",
+    "tsx": "^4.19.3",
     "typescript": "~5.7.2",
     "vite": "^6.2.0",
     "vue-tsc": "^2.2.4"

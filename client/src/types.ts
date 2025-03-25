@@ -44,6 +44,33 @@ export interface Advisor {
   students: Student[]
 }
 
+export interface AdvisorFeedback {
+  id: number;
+  first_name: string;
+  last_name: string;
+  academic_position: {
+    id: number;
+    academic_position_name: string;
+  };
+  department_id: number;
+  department: {
+    department_name: string;
+    initials?: string;
+  };
+  students: {
+    id: number;
+    student_id_card: string;
+    first_name: string;
+    last_name: string;
+    degree: {
+      degree_name: string;
+    };
+    department: {
+      department_name: string;
+    };
+  }[];
+}
+
 export interface AdvisorState {
   advisor: Advisor | null
 }
