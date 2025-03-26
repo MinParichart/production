@@ -53,7 +53,7 @@ onMounted(fetchAnnouncementById)
                 <figure ref="galleryContainer" v-html="UtilService.displayFileFromURL(announcement?.file || '').html">
                 </figure>
                 <div class="card-actions justify-end">
-                    <button @click="goBack" class="btn btn">
+                    <button @click="goBack" class="btn">
                         <font-awesome-icon :icon="['fas', 'rotate-left']" /> ถอยกลับ
                     </button>
                 </div>

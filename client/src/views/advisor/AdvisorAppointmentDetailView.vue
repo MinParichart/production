@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import UtilService from '@/services/UtilService'
+import { ref, onMounted } from 'vue'
+import AppointmentService from '@/services/AppointmentService'
+import type { Appointment } from '@/types'
 import { useAppointmentStore } from '@/stores/appointment'
 import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faRotateLeft } from '@fortawesome/free-solid-svg-icons'
-import UtilService from '@/services/UtilService'
-import { ref,onMounted } from 'vue'
-import AppointmentService from '@/services/AppointmentService'
 import AdvisorService from '@/services/AdvisorService'
-import type { Appointment } from '@/types'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
 
 const router = useRouter()
@@ -20,20 +20,20 @@ const loading = ref<boolean>(true)
 const error = ref<string | null>(null)
 
 const goBack = () => {
-      router.go(-1) // กลับไปหน้าก่อนหน้า
-  }
+  router.go(-1) // กลับไปหน้าก่อนหน้า
+}
 
 // // ฟังก์ชันดึงข้อมูลประกาศตาม ID
 const fetchAppointmentById = async () => {
-    try {
-        const appointmentById = parseInt(router.currentRoute.value.params.id as string)
-        const response = await AppointmentService.getAppointment(appointmentById) // เรียก API ตาม ID ที่เลือก
-        appointment.value = response.data
-    } catch (err) {
-        error.value = 'Error fetching appointment: ' + (err instanceof Error ? err.message : err)
-    } finally {
-        loading.value = false
-    }
+  try {
+    const appointmentById = parseInt(router.currentRoute.value.params.id as string)
+    const response = await AppointmentService.getAppointment(appointmentById) // เรียก API ตาม ID ที่เลือก
+    appointment.value = response.data
+  } catch (err) {
+    error.value = 'Error fetching appointment: ' + (err instanceof Error ? err.message : err)
+  } finally {
+    loading.value = false
+  }
 }
 
 // ตรวจสอบข้อมูลใน store
@@ -59,21 +59,21 @@ onMounted(fetchAppointmentById)
         <div class="flex flex-col">
           <div class="border-t-base-content/5 flex items-center justify-between gap-2 border-t border-dashed py-2">
             นักศึกษา
-            <span>{{ appointment?.student?.first_name || 'ไม่มีข้อมูล'}}
+            <span>{{ appointment?.student?.first_name || 'ไม่มีข้อมูล' }}
               {{ appointment?.student?.last_name || 'ไม่มีข้อมูล' }}</span>
           </div>
           <div class="border-t-base-content/5 flex items-center justify-between gap-2 border-t border-dashed py-2">
             อาจารย์ที่ปรึกษา
-            <span>{{ appointment?.advisor?.first_name || 'ไม่มีข้อมูล'  }}
-              {{ appointment?.advisor?.last_name || 'ไม่มีข้อมูล'  }}</span>
+            <span>{{ appointment?.advisor?.first_name || 'ไม่มีข้อมูล' }}
+              {{ appointment?.advisor?.last_name || 'ไม่มีข้อมูล' }}</span>
           </div>
           <div class="border-t-base-content/5 flex items-center justify-between gap-2 border-t border-dashed py-2">
             หัวข้อ
-            <span>{{ appointment?.topic || 'ไม่มีข้อมูล'  }}</span>
+            <span>{{ appointment?.topic || 'ไม่มีข้อมูล' }}</span>
           </div>
           <div class="border-t-base-content/5 flex items-center justify-between gap-2 border-t border-dashed py-2">
             คำอธิบาย
-            <span>{{ appointment?.description || 'ไม่มีข้อมูล'  }}</span>
+            <span>{{ appointment?.description || 'ไม่มีข้อมูล' }}</span>
           </div>
           <div class="border-t-base-content/5 flex items-center justify-between gap-2 border-t border-dashed py-2">
             วันที่ส่งคำขอนัดหมาย

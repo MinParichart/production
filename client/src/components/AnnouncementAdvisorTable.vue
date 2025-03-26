@@ -68,7 +68,7 @@ onMounted(fetchAnnouncements)
                                 {{
                                     (currentAnnouncementPage - 1) * pageAnnouncementSize +
                                     index +
-                                1
+                                    1
                                 }}
                             </td>
                             <td v-html="UtilService.formatDateTime(announcement.posted_date)

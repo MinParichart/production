@@ -1,6 +1,16 @@
+import { Announcement } from './../models/interface';
 import express, { Request, Response } from 'express'
 import * as announcementService from '../services/announcementService'
+import { uploadFile } from '../services/uploadFileService'
+import multer from 'multer'
+import dotenv from 'dotenv'
+import type { InAnnouncement } from '../models/announcement'
+import { describe } from 'node:test';
+
+const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router()
+dotenv.config();
+
 
 router.get('/', async (req: Request, res: Response) => {
     res.json(await announcementService.getAllAnnouncements())
@@ -26,27 +36,85 @@ router.get('/announcement-advisor/:id', async (req: Request, res: Response) => {
     }
 })
 
-router.post('/announcement-advisor/:id', async (req: Request, res: Response) => {
-  try {
-    const advisorId = parseInt(req.params.id); // ดึงค่า ID ที่ปรึกษาจาก params
-    const { topic, description, file } = req.body; // ดึงค่าจาก body
+// ส่งแบบธรรมดา
+// router.post('/announcement-advisor/:id', async (req: Request, res: Response) => {
+//   try {
+//     const advisorId = parseInt(req.params.id); // ดึงค่า ID ที่ปรึกษาจาก params
+//     const { topic, description, file } = req.body; // ดึงค่าจาก body
 
-    if (!topic || !description) {
-      return res.status(400).json({ error: 'Topic and description are required' });
+//     if (!topic || !description) {
+//       return res.status(400).json({ error: 'Topic and description are required' });
+//     }
+
+//     const addAnnouncementAdvisor = await announcementService.addAnnouncementByAdvisorId(
+//       advisorId,
+//       topic,
+//       description,
+//       file
+//     );
+
+//     res.status(201).json(addAnnouncementAdvisor);
+//   } catch (error) {
+//     console.error('Error posting announcement:', error);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// });
+
+
+// ส่งแบบแนบไฟล์
+router.post('/announcement-advisor/:id', upload.single('file'), async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id)
+  try {
+    // รับไฟล์จาก req.file
+    const file = req.file;
+    if (!file) {
+      return res.status(400).send('No file uploaded.');
     }
 
-    const addAnnouncementAdvisor = await announcementService.addAnnouncementByAdvisorId(
-      advisorId,
-      topic,
-      description,
-      file
-    );
+    const bucket = process.env.SUPABASE_BUCKET_NAME;
+    const filePath = process.env.UPLOAD_DIR;
 
-    res.status(201).json(addAnnouncementAdvisor);
+    // ตรวจสอบการตั้งค่าของ bucket และ file path
+    if (!bucket || !filePath) {
+      return res.status(500).send('Bucket name or file path not configured.');
+    }
+
+    // เรียกฟังก์ชัน uploadFile เพื่ออัปโหลดไฟล์ไปยัง Supabase และรับ URL
+    const ouputUrl = await uploadFile(bucket, filePath, file);
+
+    // รับข้อมูลจาก req.body
+    const newAnnouncement: InAnnouncement = req.body;
+
+    // ตรวจสอบว่า req.body มีค่าหรือไม่
+    if (!newAnnouncement) {
+      return res.status(400).json({ error: 'Invalid request body' });
+    }
+
+    // เตรียมข้อมูล student สำหรับเพิ่ม
+    // const dataAnnouncement = {
+
+    // };
+    const topic = req.body.topic
+    const description = req.body.description
+    const picture = ouputUrl
+
+
+    // เรียก service เพื่อเพิ่มข้อมูลนักศึกษา
+    const result = await announcementService.addAnnouncementByAdvisorId(id, topic, description, picture);
+
+    // ส่งข้อมูลที่เพิ่มสำเร็จกลับไป
+    res.status(201).json(result);
   } catch (error) {
-    console.error('Error posting announcement:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error adding advisor:', error);
+
+    // ตรวจสอบ error ที่เกิดขึ้น และส่ง response ตามกรณี
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: 'An unexpected error occurred' });
+    }
   }
 });
+
 
 export default router
