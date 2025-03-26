@@ -4,6 +4,6 @@
   "prettier.singleQuote": true,
   "postman.settings.dotenv-detection-notification-visibility": false,
   "[vue]": {
-    "editor.defaultFormatter": "Vue.volar"
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   }
 }

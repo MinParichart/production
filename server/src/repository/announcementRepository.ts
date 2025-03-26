@@ -62,3 +62,21 @@ export function getAnnouncementByAdvisorId(id: number) {
     },
   })
 }
+
+export async function addAnnouncementByAdvisorId(
+  advisorId: number,
+  topic: string,
+  description: string,
+  file?: string // ไฟล์อัปโหลดอาจเป็นตัวเลือก (optional)
+) {
+  return await prisma.announcement.create({
+    data: {
+      topic: topic,
+      description: description,
+      file: file || null, // ถ้าไม่มีไฟล์ให้ใส่ค่า null
+      posted_date: new Date(), // ใช้วันที่ปัจจุบันเป็นวันโพสต์
+      advisor_id: advisorId,
+    },
+  });
+}
+

@@ -9,4 +9,7 @@ export default {
   getAnnouncementByAdvisorId(id: number) {
     return apiClient.get(`/announcements/announcement-advisor/${id}`)
   },
+  addAnnouncementByAdvisorId(id: number) {
+    return apiClient.post(`/announcements/announcement-advisor/${id}`)
+  },
 }

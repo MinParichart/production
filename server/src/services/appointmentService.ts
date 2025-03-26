@@ -11,3 +11,4 @@ export function getAppointmentById(id: number) {
 export function getAppointmentByAdvisorId(id: number) {
   return appointmentRepository.getAppointmentByAdvisorId(id)
 }
+
