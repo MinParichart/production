@@ -5,6 +5,7 @@ import AnnouncementAdvisorTable from '@/components/AnnouncementAdvisorTable.vue'
 import AppointmentAdvisorTable from '@/components/AppointmentAdvisorTable.vue';
 import AdvisorProfile from '@/components/AdvisorProfile.vue';
 import AdvisorPost from '@/components/AdvisorPost.vue';
+import AppointmentStatusAdvisor from '@/components/AppointmentStatusAdvisor.vue';
 
 
 </script>
@@ -20,6 +21,7 @@ import AdvisorPost from '@/components/AdvisorPost.vue';
         <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
           <AdvisorPost/>
           <AnnouncementAdvisorTable />
+          <AppointmentStatusAdvisor/>
           <AppointmentAdvisorTable/>
           <AdvisorFeedbackTable />
         </div>

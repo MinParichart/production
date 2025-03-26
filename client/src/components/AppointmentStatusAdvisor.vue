@@ -5,7 +5,6 @@ import { ref, onMounted, computed } from 'vue'
 import type { Appointment } from '@/types'
 import AdvisorService from '@/services/AdvisorService'
 
-
 const appointments = ref<Appointment[]>([])
 const loading = ref<boolean>(true) // Track loading state
 const error = ref<string | null>(null) // Track any error that occurs
@@ -15,14 +14,10 @@ const fetchAppointments = async () => {
         const id = await AdvisorService.getAdvisorIdByUserId()
         const response = await AppointmentService.getAppointmentByAdvisorId(id)
 
-        // ดูทุก status
-        // appointments.value = response.data
-
         // กรองเฉพาะนัดหมายที่มี status.id === 2 (Pending)
         appointments.value = response.data.filter(
-            (appt: Appointment) => appt.status_appointment_id === 1
+            (appt: Appointment) => appt.status_appointment_id === 2
         )
-
     } catch (err) {
         error.value =
             'Error fetching appointments: ' +
@@ -60,15 +55,15 @@ onMounted(fetchAppointments)
 <template>
     <div class="card bg-white shadow-lg p-4 rounded-lg">
         <div class="card-body">
-            <h2 class="text-xl font-semibold mb-4">ข้อมูลการนัดหมาย</h2>
+            <h2 class="text-xl font-semibold mb-4">คำขอนัดหมาย</h2>
             <div class="overflow-x-auto rounded-box border border-base-content/5 mt-3">
                 <table class="table w-full">
                     <thead>
                         <tr>
                             <th>ลำดับ</th>
-                            <th>อาจารย์ที่ปรึกษา</th>
                             <th>วันที่นัดหมาย</th>
                             <th>นักศึกษา</th>
+                            <th>หัวข้อนัดหมาย</th>
                             <th>สถานะ</th>
                             <th>ตัวจัดการ</th>
                         </tr>
@@ -83,10 +78,6 @@ onMounted(fetchAppointments)
                                 }}
                             </td>
                             <td>
-                                {{ appointment.advisor?.first_name }}
-                                {{ appointment.advisor?.last_name }}
-                            </td>
-                            <td>
                                 {{
                                     UtilService.formatDateTime(
                                         appointment.appointment_request_date
@@ -97,12 +88,15 @@ onMounted(fetchAppointments)
                                 {{ appointment.student?.first_name }}
                                 {{ appointment.student?.last_name }}
                             </td>
+                            <td>
+                                {{ appointment.topic }}
+                            </td>
                             <td v-html="UtilService.statusToHtml(appointment.status?.status)
                                 "></td>
                             <td>
                                 <RouterLink :to="appointment.id
                                     ? {
-                                        name: 'advisor-appointment-detail-view',
+                                        name: 'advisor-appointment-detail-view-request',
                                         params: { id: appointment.id },
                                     }
                                     : '#'
