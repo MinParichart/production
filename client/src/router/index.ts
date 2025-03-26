@@ -24,6 +24,8 @@ import adminAnnouncementsDetailView from '@/views/admin/adminAnnouncementsDetail
 import AdvisorListView from '@/views/advisor/AdvisorListView.vue'
 import advisorDashboardView from '@/views/advisor/advisorDashboardView.vue'
 import FeedbackView from '@/views/advisor/FeedbackView.vue'
+import AdvisorAppointmentDetailView from '@/views/advisor/AdvisorAppointmentDetailView.vue'
+import AdvisorAnnouncementsDetailView from '@/views/advisor/AdvisorAnnouncementsDetailView.vue'
 
 import studentService from '@/services/StudentService'
 import StudentListView from '@/views/student/StudentListView.vue'
@@ -329,7 +331,7 @@ const router = createRouter({
           if (isNaN(id)) {
             return {
               name: '404-resource-view',
-              params: { resource: 'appointment' },
+              params: { resource: 'feedback' },
             }
           }
           const feedbackStore = useFeedbackStore()
@@ -342,6 +344,76 @@ const router = createRouter({
             const status = error.response?.status
             return status === 404
               ? { name: '404-resource-view', params: { resource: 'feedback' } }
+              : { name: 'network-error-view' }
+          }
+        }
+      },
+    },
+    {
+      path: '/advisor/detail/appointment/:id',
+      name: 'advisor-appointment-detail-view',
+      component: AdvisorAppointmentDetailView,
+      props: true,
+      beforeEnter: async (to: any) => {
+        const authStore = useAuthStore()
+        if (!authStore.isAdvisor) {
+          return {
+            name: '404-resource-view',
+            params: { resource: 'you-are-not-allowed-to-access' },
+          }
+        } else {
+          const id = Number(to.params.id) // ป้องกัน NaN
+          if (isNaN(id)) {
+            return {
+              name: '404-resource-view',
+              params: { resource: 'appointment' },
+            }
+          }
+          const appointmentStore = useAppointmentStore()
+          try {
+            const response = await AppointmentService.getAppointmentByAdvisorId(id)
+            appointmentStore.setStore(response.data)
+            return true // อนุญาตให้ไปต่อ
+          } catch (error: any) {
+            console.error('Fetch Appointment Error:', error) // เพิ่ม log สำหรับ debug
+            const status = error.response?.status
+            return status === 404
+              ? { name: '404-resource-view', params: { resource: 'appointment' } }
+              : { name: 'network-error-view' }
+          }
+        }
+      },
+    },
+    {
+      path: '/advisor/detail/announcement/:id',
+      name: 'advisor-announcement-detail-view',
+      component: AdvisorAnnouncementsDetailView,
+      props: true,
+      beforeEnter: async (to: any) => {
+        const authStore = useAuthStore()
+        if (!authStore.isAdvisor) {
+          return {
+            name: '404-resource-view',
+            params: { resource: 'you-are-not-allowed-to-access' },
+          }
+        } else {
+          const id = Number(to.params.id) // ป้องกัน NaN
+          if (isNaN(id)) {
+            return {
+              name: '404-resource-view',
+              params: { resource: 'announcement' },
+            }
+          }
+          const announcementStore = useAnnouncementStore()
+          try {
+            const response = await AnnouncementService.getAnnouncementByAdvisorId(id)
+            announcementStore.setStore(response.data)
+            return true // อนุญาตให้ไปต่อ
+          } catch (error: any) {
+            console.error('Fetch Announcement Error:', error) // เพิ่ม log สำหรับ debug
+            const status = error.response?.status
+            return status === 404
+              ? { name: '404-resource-view', params: { resource: 'announcement' } }
               : { name: 'network-error-view' }
           }
         }

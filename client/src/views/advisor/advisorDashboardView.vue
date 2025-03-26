@@ -1,7 +1,8 @@
 <script setup lang="ts">
 
 import AdvisorFeedbackTable from '@/components/AdvisorFeedbackTable.vue';
-import AnnouncementAdvisorTable from '@/components/AnnouncementAdvisorTabl.vue';
+import AnnouncementAdvisorTable from '@/components/AnnouncementAdvisorTable.vue';
+import AppointmentAdvisorTable from '@/components/AppointmentAdvisorTable.vue';
 import AdvisorProfile from '@/components/AdvisorProfile.vue';
 
 </script>
@@ -31,6 +32,7 @@ import AdvisorProfile from '@/components/AdvisorProfile.vue';
 
         <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mt-4">
           <AnnouncementAdvisorTable />
+          <AppointmentAdvisorTable/>
           <AdvisorFeedbackTable />
         </div>
 

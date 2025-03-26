@@ -7,3 +7,7 @@ export function getAllAppointments() {
 export function getAppointmentById(id: number) {
   return appointmentRepository.getAppointmentById(id)
 }
+
+export function getAppointmentByAdvisorId(id: number) {
+  return appointmentRepository.getAppointmentByAdvisorId(id)
+}

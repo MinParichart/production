@@ -6,4 +6,7 @@ export default {
   getAppointment(id: number) {
     return apiClient.get(`/appointments/${id}`);
   },
+  getAppointmentByAdvisorId(id: number) {
+    return apiClient.get(`/appointments/appointment-advisor/${id}`);
+  },
 };

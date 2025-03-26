@@ -16,4 +16,14 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
+router.get('/appointment-advisor/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id)
+    const getAppointmentByAdvisor = await appointmentService.getAppointmentByAdvisorId(id)
+    if (getAppointmentByAdvisor) {
+      res.json(getAppointmentByAdvisor)
+    } else {
+      res.status(404).send('Appointment by this advisor not found')
+    }
+})
+
 export default router

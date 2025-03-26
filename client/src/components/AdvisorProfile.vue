@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import AdvisorService from '@/services/AdvisorService'
 import AnnouncementService from '@/services/AnnouncementService'
+import AppointmentService from '@/services/AppointmentService'
 import { ref, onMounted } from 'vue'
-import type { AcademicPosition, Department } from '@/types'
+import type { AcademicPosition, Department, Appointment } from '@/types'
 
 interface Advisor { 
     id: number
@@ -64,9 +65,28 @@ const fetchAnnouncements = async () => {
   }
 }
 
+const appointments = ref<Appointment[]>([])
+const loadingAppointments = ref(false)
+const appointmentError = ref<string | null>(null)
+
+const fetchAppointments = async () => {
+  try {
+    loadingAppointments.value = true
+    const advisorId = await AdvisorService.getAdvisorIdByUserId()
+    const response = await AppointmentService.getAppointmentByAdvisorId(advisorId)
+    appointments.value = response.data
+  } catch (err) {
+    appointmentError.value = 'Error fetching appointments: ' + 
+      (err instanceof Error ? err.message : 'Unknown error')
+  } finally {
+    loadingAppointments.value = false
+  }
+}
+
 onMounted(async () => {
   await fetchAdvisors()
   await fetchAnnouncements()
+  await fetchAppointments()
 })
 
 /* Advisor End */
@@ -78,15 +98,14 @@ onMounted(async () => {
                     <img src="#" alt="Profile Picture" class="rounded-full w-24 h-24" />
                 </figure>
                 <div class="card-body items-center text-center">
-                    <!-- <h2 class="card-title">{{  typedAdvisorProfile?.academic_position?.academic_position_name || "ไม่พบข้อมูล" }} </h2> -->
                     <h2 class="card-title"> {{ typedAdvisorProfile ? `${typedAdvisorProfile.first_name} ${typedAdvisorProfile.last_name}` : "ไม่พบข้อมูล" }} </h2>
-                    <!-- <p>{{ typedAdvisorProfile?.department ? `${typedAdvisorProfile.department.department_name} (${typedAdvisorProfile.department.initials})` : "ไม่พบข้อมูล" }} </p> -->
                     <div class="divider"></div>
                     <ul class="menu bg-base-200 w-full rounded-box">
                         <li class="bg-primary text-white"><a><i class="fa fa-user"></i> profile </a></li>
                         <li><a><i class="fa fa-calendar"></i> All Announcements <span
                                     class="badge badge-warning">{{  announcements.length }}</span></a></li>
-                        <!-- <li><a><i class="fa fa-edit"></i> Edit Profile</a></li> -->
+                        <li><a><i class="fa fa-calendar"></i> All Request <span
+                                    class="badge badge-warning">{{  appointments.length }}</span></a></li>
                     </ul>
                     
                     <div class="card bg-base-100 w-full shadow-xl p-4 mt-1 text-left">

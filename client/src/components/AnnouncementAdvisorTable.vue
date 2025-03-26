@@ -77,7 +77,7 @@ onMounted(fetchAnnouncements)
                             <td>
                                 <RouterLink :to="announcement.id
                                     ? {
-                                        name: 'admin-announcement-detail-view',
+                                        name: 'advisor-announcement-detail-view',
                                         params: { id: announcement.id },
                                     }
                                     : '#'
