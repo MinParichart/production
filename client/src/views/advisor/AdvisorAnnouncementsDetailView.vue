@@ -4,14 +4,26 @@ import { useRouter } from 'vue-router'
 import AnnouncementService from '@/services/AnnouncementService'
 import UtilService from '@/services/UtilService'
 import type { Announcement } from '@/types'
-import { useAnnouncementStore } from '@/stores/announcement'
-import { storeToRefs } from 'pinia'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faRotateLeft } from '@fortawesome/free-solid-svg-icons'
-import type { Advisor } from '@/types'
-import AdvisorService from '@/services/AdvisorService'
+// import { useAnnouncementStore } from '@/stores/announcement'
+// import { storeToRefs } from 'pinia'
+// import { library } from '@fortawesome/fontawesome-svg-core'
+// import { faRotateLeft } from '@fortawesome/free-solid-svg-icons'
+// import type { Advisor } from '@/types'
+// import AdvisorService from '@/services/AdvisorService'
 import { Fancybox } from '@fancyapps/ui'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
+
+const galleryContainer = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+    if (galleryContainer.value) {
+        Fancybox.bind("[data-fancybox='gallery']", {})
+    }
+})
+
+onUnmounted(() => {
+    Fancybox.destroy()
+})
 
 const router = useRouter()
 const announcement = ref<Announcement | null>(null)
