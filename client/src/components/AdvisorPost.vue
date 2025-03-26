@@ -1,44 +1,8 @@
 <script setup lang="ts">
-// import AnnouncementService from '@/services/AnnouncementService'
-// import AdvisorService from '@/services/AdvisorService'
-// import { ref } from 'vue';
-// import type { Advisor } from '@/types';
-// import ampp
-// // import { addAnnouncementByAdvisorId } from '@/services/AnnouncementService';
-
-// // const announcementForm = ref({AnnouncementService})
-
-// // const submitAnnouncement = async () => {
-// //   try {
-// //     const advisorId = 1 // หรือดึงจากที่อื่น เช่น Pinia store
-// //     await addAnnouncementByAdvisorId(advisorId, announcementForm.value)
-// //     alert('Announcement added successfully!')
-// //   } catch (error) {
-// //     console.error('Error:', error)
-// //     alert('Failed to add announcement')
-// //   }
-// // }
-
-// const advisors = ref<Advisor[]>([])
-// const loading = ref<boolean>(true) // Track loading state
-// const error = ref<string | null>(null) // Track any error that occurs
-
-// const fetchsubmitAnnouncement = async () => {
-//     try {
-//         const id = await AdvisorService.getAdvisorIdByUserId()
-//         const response = await AnnouncementService.addAnnouncementByAdvisorId(id)
-//         announcements.value = response.data
-//     } catch (err) {
-//         error.value =
-//             'Error fetching announcements: ' +
-//             (err instanceof Error ? err.message : err)
-//     } finally {
-//         loading.value = false
-//     }
-// }
 
 
 </script>
+
 <template>
 <div class="card bg-base-100 shadow-xl p-4">
   <section class="container mx-auto p-4">

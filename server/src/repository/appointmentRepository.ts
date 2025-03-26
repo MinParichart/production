@@ -36,7 +36,7 @@ export function getAllAppointments() {
 
 export function getAppointmentByAdvisorId(id: number) {
   return prisma.appointment.findMany({
-    where: { id },
+    where: { advisor_id: id },
     select: {
       id: true,
       topic: true,

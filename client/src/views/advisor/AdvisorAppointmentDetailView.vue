@@ -8,67 +8,39 @@ import UtilService from '@/services/UtilService'
 import { ref,onMounted } from 'vue'
 import AppointmentService from '@/services/AppointmentService'
 import AdvisorService from '@/services/AdvisorService'
-import type { Student, Advisor, Admin, StatusAppointment} from '@/types'
+import type { Appointment } from '@/types'
+import '@fancyapps/ui/dist/fancybox/fancybox.css'
 
-const store = useAppointmentStore()
 const router = useRouter()
-const { appointment } = storeToRefs(store)
+
+// const { appointment } = storeToRefs(store)
+
+const appointment = ref<Appointment | null>(null)
+const loading = ref<boolean>(true)
+const error = ref<string | null>(null)
+
 const goBack = () => {
-  router.go(-1) // กลับไปหน้าก่อนหน้า
-}
-library.add(faRotateLeft)
-
-interface Appointment {
-  id: number
-  topic: string
-  description?: string
-  requested_date: Date
-  appointment_request_date: Date
-  student_confirmation: boolean
-  student_id?: number
-  advisor_id?: number
-  status_appointment_id?: number
-  admin_id?: number
-  student?: Student
-  advisor?: Advisor
-  status?: StatusAppointment
-  admin?: Admin
-}
-
-const appointments = ref<Appointment[]>([])
-const loadingAppointments = ref(false)
-const appointmentError = ref<string | null>(null)
-
-// แทนที่ fetchAppointments ด้วยนี้
-const fetchAppointments = async () => {
-  try {
-    loadingAppointments.value = true
-    const advisorId = await AdvisorService.getAdvisorIdByUserId()
-    const response = await AppointmentService.getAppointmentByAdvisorId(advisorId)
-    
-    // วิธีที่ 1: ถ้าต้องการแสดงรายการทั้งหมด
-    appointments.value = response.data
-    
-    // วิธีที่ 2: ถ้าต้องการแสดงเฉพาะรายการแรก (หรือเลือกตาม ID)
-    if (response.data.length > 0) {
-      store.appointment = response.data[0] // เซ็ตค่าให้ Pinia store
-    }
-  } catch (err) {
-    appointmentError.value = 'Error fetching appointments: ' + 
-      (err instanceof Error ? err.message : 'Unknown error')
-  } finally {
-    loadingAppointments.value = false
+      router.go(-1) // กลับไปหน้าก่อนหน้า
   }
+
+// // ฟังก์ชันดึงข้อมูลประกาศตาม ID
+const fetchAppointmentById = async () => {
+    try {
+        const appointmentById = parseInt(router.currentRoute.value.params.id as string)
+        const response = await AppointmentService.getAppointment(appointmentById) // เรียก API ตาม ID ที่เลือก
+        appointment.value = response.data
+    } catch (err) {
+        error.value = 'Error fetching appointment: ' + (err instanceof Error ? err.message : err)
+    } finally {
+        loading.value = false
+    }
 }
 
 // ตรวจสอบข้อมูลใน store
-onMounted(() => {
-  fetchAppointments().then(() => {
-    console.log('Store appointment:', store.appointment)
-    console.log('Local appointments:', appointments.value)
-  })
-})
+onMounted(fetchAppointmentById)
+
 </script>
+
 <template>
   <div class="max-w-6xl mx-auto p-5">
     <div class="card bg-white shadow-lg p-4 rounded-lg mt-10">
@@ -130,7 +102,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <button class="btn w-lg" @click="goBack">
+      <button class="btn btn-start" @click="goBack">
         <font-awesome-icon :icon="['fas', 'rotate-left']" /> ถอยกลับ
       </button>
     </div>

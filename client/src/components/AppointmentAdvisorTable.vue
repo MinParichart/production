@@ -14,6 +14,7 @@ const fetchAppointments = async () => {
         const id = await AdvisorService.getAdvisorIdByUserId()
         const response = await AppointmentService.getAppointmentByAdvisorId(id)
         appointments.value = response.data
+        appointments.value = response.data
     } catch (err) {
         error.value =
             'Error fetching appointments: ' +
@@ -47,6 +48,7 @@ const nextAppointment = () => {
 /* Appointment End */
 onMounted(fetchAppointments)
 </script>
+
 <template>
     <div class="card bg-white shadow-lg p-4 rounded-lg">
         <div class="card-body">
