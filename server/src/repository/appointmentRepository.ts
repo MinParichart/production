@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
+import type { Appointment } from '../models/appointment'
 
 export function getAllAppointments() {
   return prisma.appointment.findMany({
@@ -96,4 +97,35 @@ export function getAppointmentById(id: number) {
       },
     },
   })
+}
+
+// updateAppointmentStatus
+export async function updateAppointmentStatus(id: number, statusId: number) {
+  return prisma.appointment.update({
+    where: { id },
+    data: {
+      status_appointment_id: statusId,
+    },
+    include: {
+      status: true,
+      student: true,
+      advisor: true,
+    },
+  });
+}
+
+export async function approveAppointment(id: number) {
+  return updateAppointmentStatus(id, 1); // 1 = Approved
+}
+
+export async function rejectAppointment(id: number) {
+  return updateAppointmentStatus(id, 3); // 3 = Rejected
+}
+
+export async function setPendingAppointment(id: number) {
+  return updateAppointmentStatus(id, 2); // 2 = Pending
+}
+
+export async function setUnsuccessfulAppointment(id: number) {
+  return updateAppointmentStatus(id, 4); // 4 = Request is not successful
 }

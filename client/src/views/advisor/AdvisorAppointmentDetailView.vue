@@ -4,14 +4,11 @@ import UtilService from '@/services/UtilService'
 import { ref, onMounted } from 'vue'
 import AppointmentService from '@/services/AppointmentService'
 import type { Appointment } from '@/types'
-import { useAppointmentStore } from '@/stores/appointment'
-import { storeToRefs } from 'pinia'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faRotateLeft } from '@fortawesome/free-solid-svg-icons'
-import AdvisorService from '@/services/AdvisorService'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
+import { useAnnouncementStore } from '@/stores/announcement'
 
 const router = useRouter()
+const store = useAnnouncementStore()
 
 // const { appointment } = storeToRefs(store)
 
@@ -33,6 +30,42 @@ const fetchAppointmentById = async () => {
     error.value = 'Error fetching appointment: ' + (err instanceof Error ? err.message : err)
   } finally {
     loading.value = false
+  }
+}
+
+// ฟังก์ชันอนุมัติ
+const approveAppointment = async () => {
+  try {
+    if (!appointment.value) return
+    
+    const response = await AppointmentService.updateAppointmentStatus(
+      appointment.value.id,
+      'approved' // หรือใช้ status ID ตามระบบของคุณ
+    )
+    
+    appointment.value.status = response.data.status
+    alert('อนุมัติการนัดหมายเรียบร้อยแล้ว')
+  } catch (error) {
+    console.error('Error approving appointment:', error)
+    alert('เกิดข้อผิดพลาดในการอนุมัติ')
+  }
+}
+
+// ฟังก์ชันปฏิเสธ
+const rejectAppointment = async () => {
+  try {
+    if (!appointment.value) return
+    
+    const response = await AppointmentService.updateAppointmentStatus(
+      appointment.value.id,
+      'rejected' // หรือใช้ status ID ตามระบบของคุณ
+    )
+    
+    appointment.value.status = response.data.status
+    alert('ปฏิเสธการนัดหมายเรียบร้อยแล้ว')
+  } catch (error) {
+    console.error('Error rejecting appointment:', error)
+    alert('เกิดข้อผิดพลาดในการปฏิเสธ')
   }
 }
 

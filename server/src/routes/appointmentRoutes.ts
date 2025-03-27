@@ -26,4 +26,44 @@ router.get('/appointment-advisor/:id', async (req: Request, res: Response) => {
     }
 })
 
+router.put('/approveAppointment/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id)
+    const approveAppointment = await appointmentService.approveAppointment(id)
+    if (approveAppointment) {
+      res.json(approveAppointment)
+    } else {
+      res.status(404).send('Appointment by this advisor not Found')
+    }
+})
+
+router.put('/approveAppointment/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id)
+    const approveAppointment = await appointmentService.approveAppointment(id)
+    if (approveAppointment) {
+      res.json(approveAppointment)
+    } else {
+      res.status(404).send('Appointment by this advisor not Found')
+    }
+})
+
+router.put('/rejectAppointment/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id)
+    const rejectAppointment = await appointmentService.rejectAppointment(id)
+    if (rejectAppointment) {
+      res.json(rejectAppointment)
+    } else {
+      res.status(404).send('Appointment by this advisor not Found')
+    }
+})
+
+router.put('/setPendingAppointment/:id', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id)
+    const setPendingAppointment = await appointmentService.setPendingAppointment(id)
+    if (setPendingAppointment) {
+      res.json(setPendingAppointment)
+    } else {
+      res.status(404).send('Appointment by this advisor not Found')
+    }
+})
+
 export default router
